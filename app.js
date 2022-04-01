@@ -82,45 +82,18 @@ const menu = [
 ];
 
 const sectionCenter = document.querySelector(".section-center")
-const filterBtns = document.querySelectorAll('.filter-btn')
+const container = document.querySelector(".btn-container")
 
 window.addEventListener('DOMContentLoaded', () => {
   displayMenuItems(menu)
-  const categories = menu.reduce( (values,item) => {
-    if (!values.includes(item.category)) {
-        values.push(item.category)
-    }
-    
-    return values
-  }, ['all'])
+  displayMenuButtons()
 
-
-const categoryBtns = categories.map( (category) => {
-  return `button type="button" class="filter-btn" data-id="${category}">
-  ${category}
-</button>`}).join('')
-
-console.log(categoryBtns)
 })  
 
 
 
-filterBtns.forEach( (filterBtn) => {
-    filterBtn.addEventListener('click', (e) => {
-      const category = e.currentTarget.dataset.id
-      const menuCategory = menu.filter( (menuItem) => {
-        if (menuItem.category === category) {
-          return menuItem
-        }
-      })
-      if (category === 'all') {
-        displayMenuItems(menu)
-      }
-      else {
-        displayMenuItems(menuCategory)
-      }
-    })
-})
+
+
 
 function displayMenuItems(menuItems) {
   let displayMenu = menuItems.map( (item) => {
@@ -139,4 +112,53 @@ function displayMenuItems(menuItems) {
   sectionCenter.innerHTML = displayMenu
 }
 
+function displayMenuButtons() {
 
+// this is creating a simplified array from 'menu' without duplicate categories  
+    const categories = menu.reduce( (values,item) => {
+      
+        if (!values.includes(item.category)) {
+        
+            values.push(item.category)
+    
+        }
+  
+        return values
+        }, ['all'])
+
+// this is creating the html for a button for each of the categories we have
+    const categoryBtns = categories.map( (category) => {
+        return `<button type="button" class="filter-btn" data-id="${category}">
+        ${category}</button>`}).join('')
+
+// this is adding the html
+    container.innerHTML = categoryBtns
+
+// this is selecting all of the buttons to add functionality to    
+    const filterBtns = container.querySelectorAll('.filter-btn')
+
+// this is adding the click event listener functionality to each of the buttons
+
+    filterBtns.forEach( (filterBtn) => {
+        filterBtn.addEventListener('click', (e) => {
+            const category = e.currentTarget.dataset.id
+            
+// this creates a new array that matches only the event target category to the menu item category 
+
+            const menuCategory = menu.filter( (menuItem) => {
+                if (menuItem.category === category) {
+                    return menuItem
+                }   
+            })
+        
+            if (category === 'all') {
+                displayMenuItems(menu)
+            }
+        
+            else {
+                displayMenuItems(menuCategory)
+            }
+        }) // closes addEventListener
+    }) // closes filterBtns.forEach
+
+}// closes display menu buttons
